@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Chat app</string>
+    <string name="txt_enter">Entrar</string>
+    <string name="btn_new_account">Não tem uma conta? Clique aqui!</string>
+</resources>
