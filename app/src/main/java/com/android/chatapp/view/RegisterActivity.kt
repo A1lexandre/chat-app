@@ -1,6 +1,6 @@
 package com.android.chatapp.view
 
-import android.graphics.drawable.Drawable
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,9 +8,9 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
-import com.android.chatapp.R
 import com.android.chatapp.model.User
 import com.android.chatapp.databinding.ActRegisterBinding
+import com.android.chatapp.utils.Constants.app.USERS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -78,19 +78,23 @@ class RegisterActivity : AppCompatActivity() {
         val ref = Firebase.storage.getReference("/images/$filename")
         ref.putFile(selectedPhoto)
             .addOnSuccessListener {
-                ref.downloadUrl.addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener { uri ->
+                    val id = auth.currentUser?.uid ?: ""
                     val user = User(
                             name = binding.editName.text.toString(),
-                            photoUrl = it.toString(),
-                            id = auth.currentUser?.uid ?: ""
+                            photoUrl = uri.toString(),
+                            id = id
                     )
-                    firestore.collection("users").document()
-                        .set(user).addOnCompleteListener {
-                            if(it.isSuccessful) {
-                                TODO()
+                    firestore.collection(USERS).document(id)
+                        .set(user).addOnCompleteListener { task ->
+                            if(task.isSuccessful) {
+                                val intent = Intent(this, MessagesActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
                             } else {
                                 auth.currentUser?.delete()
                                 ref.delete()
+                                Toast.makeText(this, task.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
                             }
                         }
                 }

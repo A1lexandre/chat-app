@@ -7,4 +7,9 @@
     <string name="txt_name">Name</string>
     <string name="txt_create">Criar</string>
     <string name="txt_select_photo">Selecionar foto</string>
+    <string name="txt_contacts">Contatos</string>
+    <string name="txt_logout">Logout</string>
+    <string name="txt_send">Enviar</string>
+    <string name="string_message_hint">Digite a mensagem</string>
+    <string name="messages_screen_name">Conversas</string>
 </resources>
