@@ -10,11 +10,14 @@ import com.android.chatapp.databinding.ActChatBinding
 import com.android.chatapp.model.Message
 import com.android.chatapp.model.User
 import com.android.chatapp.utils.Constants.app.CONVERSATIONS
+import com.android.chatapp.utils.Constants.app.ONLINE
 import com.android.chatapp.utils.Constants.app.TIMESTAMP
 import com.android.chatapp.utils.Constants.app.USER
 import com.android.chatapp.utils.Constants.app.USERS
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -29,6 +32,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var binding: ActChatBinding
     private lateinit var contact: User
     private lateinit var me: User
+    private lateinit var registration: ListenerRegistration
     private val adapter by lazy {
         GroupieAdapter()
     }
@@ -45,8 +49,8 @@ class ChatActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         getConversationParticipants()
+        setToolBarContent()
 
-        supportActionBar?.title = contact.name
         binding.rvMessages.apply {
             adapter = this@ChatActivity.adapter
             layoutManager = LinearLayoutManager(this@ChatActivity)
@@ -106,6 +110,22 @@ class ChatActivity : AppCompatActivity() {
                 me = user
                 fetchMessages()
             } }
+    }
+
+    private fun setToolBarContent() {
+        supportActionBar.apply {
+            title = contact.name
+            registration = firestore.collection(USERS).document(contact.id).addSnapshotListener { value, _ ->
+                if(value != null)
+                    supportActionBar?.subtitle = if(value[ONLINE] as Boolean) "online" else null
+            }
+
+        }
+    }
+
+    override fun onDestroy() {
+        registration.remove()
+        super.onDestroy()
     }
 
     inner class MessageItem(private val message: Message): Item<GroupieViewHolder>() {

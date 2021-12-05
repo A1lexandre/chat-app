@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.android.chatapp.databinding.ActLoginBinding
+import com.android.chatapp.utils.Constants.app.ONLINE
+import com.android.chatapp.utils.Constants.app.USERS
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
@@ -43,6 +46,7 @@ class LoginActivity : AppCompatActivity() {
             auth.signInWithEmailAndPassword(email, pass)
                 .addOnCompleteListener {
                     if(it.isSuccessful) {
+                        Firebase.firestore.collection(USERS).document(auth.uid ?: "").update(ONLINE, true)
                         val intent = Intent(this@LoginActivity, MessagesActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)

@@ -8,5 +8,6 @@ class Constants {
         const val CONVERSATIONS = "conversations"
         const val TIMESTAMP = "timestamp"
         const val NAME = "name"
+        const val ONLINE = "online"
     }
 }

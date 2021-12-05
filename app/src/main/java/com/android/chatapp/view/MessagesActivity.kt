@@ -6,12 +6,18 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.android.chatapp.R
+import com.android.chatapp.utils.Constants.app.ONLINE
+import com.android.chatapp.utils.Constants.app.USERS
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class MessagesActivity : AppCompatActivity() {
     private val auth by lazy {
         Firebase.auth
+    }
+    private val firestore by lazy {
+        Firebase.firestore
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +45,8 @@ class MessagesActivity : AppCompatActivity() {
                 startActivity(Intent(this, ContactsActivity::class.java))
             }
             R.id.logout_item -> {
+                firestore.collection(USERS).document(auth.currentUser?.uid ?: "")
+                    .update(ONLINE, false)
                 auth.signOut()
                 verifyAuthentication()
             }
