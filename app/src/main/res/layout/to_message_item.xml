@@ -11,22 +11,22 @@
         android:layout_height="50dp"
         android:layout_margin="8dp"
         tools:src="@tools:sample/avatars"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_msg"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_edittext_rounded"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:maxWidth="240dp"
         android:padding="8dp"
         app:layout_constraintTop_toTopOf="@id/img_contact_photo"
-        app:layout_constraintStart_toEndOf="@id/img_contact_photo"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/img_contact_photo"
         tools:text="LALALALALALLAALAL" />
 
 

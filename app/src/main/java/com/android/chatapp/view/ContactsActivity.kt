@@ -10,9 +10,11 @@ import com.android.chatapp.R
 import com.android.chatapp.databinding.ActContactsBinding
 import com.android.chatapp.databinding.ContactItemBinding
 import com.android.chatapp.model.User
+import com.android.chatapp.utils.Constants.app.NAME
 import com.android.chatapp.utils.Constants.app.USER
 import com.android.chatapp.utils.Constants.app.USERS
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
@@ -37,7 +39,9 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     private fun fetchUsers() {
-        Firebase.firestore.collection(USERS).addSnapshotListener { value, error ->
+        Firebase.firestore.collection(USERS)
+            .orderBy(NAME, Query.Direction.ASCENDING)
+            .addSnapshotListener { value, error ->
             if(value != null) {
                 val listOfContacts = value.toObjects(User::class.java)
                 adapter.addAll(listOfContacts
@@ -64,11 +68,14 @@ class ContactsActivity : AppCompatActivity() {
             return ContactItemBinding.bind(v)
         }
 
+        fun getUser(): User {
+            return user;
+        }
     }
 
     private fun clickListener(): OnItemClickListener = OnItemClickListener { item, _ ->
         val intent = Intent(this, ChatActivity::class.java)
-        intent.putExtra(USER, item as User)
+        intent.putExtra(USER, (item as ContactItem).getUser())
         startActivity(intent)
         finish()
     }
