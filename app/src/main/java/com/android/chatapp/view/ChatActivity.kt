@@ -7,21 +7,22 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.chatapp.R
 import com.android.chatapp.databinding.ActChatBinding
+import com.android.chatapp.model.LastMessage
 import com.android.chatapp.model.Message
 import com.android.chatapp.model.User
+import com.android.chatapp.utils.Constants.app.CONTACTS
 import com.android.chatapp.utils.Constants.app.CONVERSATIONS
+import com.android.chatapp.utils.Constants.app.LAST_MESSAGES
 import com.android.chatapp.utils.Constants.app.ONLINE
 import com.android.chatapp.utils.Constants.app.TIMESTAMP
 import com.android.chatapp.utils.Constants.app.USER
 import com.android.chatapp.utils.Constants.app.USERS
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firestore.admin.v1.Index
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -70,19 +71,44 @@ class ChatActivity : AppCompatActivity() {
                 fromId = me.id,
                 toId = contact.id
             )
+
             val conversationsRef = firestore.collection(CONVERSATIONS)
             conversationsRef.document(message.fromId)
                 .collection(message.toId)
                 .add(message).addOnCompleteListener {
-                    if(it.isSuccessful)
+                    if(it.isSuccessful) {
+                        val lastMessage = LastMessage(
+                            photoUrl = contact.photoUrl,
+                            userName = contact.name,
+                            textMessage = msg,
+                            timestamp = message.timestamp,
+                            userId = contact.id
+                        )
+                        setLastMessage(lastMessage, me.id, contact.id)
                         conversationsRef.document(message.toId)
                             .collection(message.fromId)
                             .add(message)
-                    else
+                            .addOnSuccessListener {
+                                val lastMessage = LastMessage(
+                                    photoUrl = me.photoUrl,
+                                    userName = me.name,
+                                    textMessage = msg,
+                                    timestamp = message.timestamp,
+                                    userId = me.id
+                                )
+                                setLastMessage(lastMessage, contact.id, me.id)
+                            }
+                    } else
                         Toast.makeText(this, it.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
                 }
         }
 
+    }
+
+    private fun setLastMessage(lastMessage: LastMessage, fromId: String, toId: String) {
+        val lastMessagesRef = firestore.collection(LAST_MESSAGES)
+        lastMessagesRef.document(fromId).collection(CONTACTS)
+            .document(toId).set(lastMessage)
     }
 
     private fun fetchMessages() {

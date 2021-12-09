@@ -9,5 +9,7 @@ class Constants {
         const val TIMESTAMP = "timestamp"
         const val NAME = "name"
         const val ONLINE = "online"
+        const val LAST_MESSAGES = "last-messages"
+        const val CONTACTS = "contacts"
     }
 }

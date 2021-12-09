@@ -6,4 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".view.MessagesActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_last_messages"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/last_message_item"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

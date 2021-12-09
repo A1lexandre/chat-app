@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_contact_photo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="8dp"
+        tools:src="@tools:sample/avatars"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/contact_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:layout_marginRight="8dp"
+        android:maxWidth="240dp"
+        app:layout_constraintTop_toTopOf="@id/img_contact_photo"
+        app:layout_constraintStart_toEndOf="@id/img_contact_photo"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Albus Percival Wulfric Brian Dumbledore Garcua" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_msg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="Oi Amigo, tudo bom?"
+        app:layout_constraintTop_toBottomOf="@id/contact_name"
+        app:layout_constraintStart_toStartOf="@id/contact_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:maxLines="1"
+        android:ellipsize="end"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

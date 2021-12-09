@@ -28,7 +28,7 @@ class SessionTracker: LifecycleEventObserver {
                         .update(ONLINE, true)
                 }
             }
-            Lifecycle.Event.ON_STOP -> {
+            Lifecycle.Event.ON_PAUSE -> {
                 auth.currentUser?.let {
                     firestore.collection(USERS).document(it.uid)
                         .update(ONLINE, false)
